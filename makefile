@@ -1,4 +1,5 @@
 # Amnesia remove project
+
 all: arm
 
 arm: arm.o
@@ -7,7 +8,9 @@ arm: arm.o
 arm.o: arm.c
 	gcc -Wall -std=c99 -c arm.c -o arm.o
 
-# TODO install
+install: arm
+	mkdir -p $(PREFIX)/bin
+	install ./arm $(PREFIX)/bin/
 
 clean:
 	rm -v *.o

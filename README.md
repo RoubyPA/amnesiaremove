@@ -8,7 +8,12 @@ make
 
 ### Installation
 ```shell
-make install
+sudo make install
+```
+
+#### Specify installation prefix with:
+```shell
+sudo make PREFIX=/my/prefix install
 ```
 
 ## TODO list
