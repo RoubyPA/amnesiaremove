@@ -326,5 +326,7 @@ main (int argc, char **argv)
 	remove_file (files[i]);
     }
 
+  free (*files);
+  
   exit (EXIT_SUCCESS);
 }
