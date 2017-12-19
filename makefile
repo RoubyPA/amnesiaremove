@@ -5,9 +5,9 @@ all: build
 build: src/arm.makefile
 	make -C src -f arm.makefile
 
-install: arm
+install: src/arm
 	mkdir -p $(PREFIX)/bin
-	install ./arm $(PREFIX)/bin/
+	install ./src/arm $(PREFIX)/bin/
 
 clean:
 	make -C src -f arm.makefile clean
