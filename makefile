@@ -1,16 +1,13 @@
 # Amnesia remove project
 
-all: arm
+all: build
 
-arm: arm.o
-	gcc -Wall -std=c99 arm.o -o arm
-
-arm.o: arm.c
-	gcc -Wall -std=c99 -c arm.c -o arm.o
+build: src/arm.makefile
+	make -C src -f arm.makefile
 
 install: arm
 	mkdir -p $(PREFIX)/bin
 	install ./arm $(PREFIX)/bin/
 
 clean:
-	rm -v *.o
+	make -C src -f arm.makefile clean
