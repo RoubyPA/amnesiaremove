@@ -18,9 +18,9 @@ usage (char *prog)
   printf ("Remove (unlink) the file(s).\n\n");
   printf ("  -f, --force\t igniore nonexistent files and arguments, \n"
 	  "never prompt\n");
-  /*   printf ("  -i\t\t prompt before every removal\n"); */
-  /*   printf ("  -I\t\t prompt once before removing more than three files, or\n" */
-  /*           "\t\t when removing recursively\n"); */
+  printf ("  -i\t\t prompt before every removal\n");
+  printf ("  -I\t\t prompt once before removing more than three files, or\n"
+	  "\t\t when removing recursively\n");
   /* TODO interactive long opt */
   printf ("  -r, -R, --recursive\t remove directories and their contents \n"
 	  "recursively\n");
@@ -38,7 +38,7 @@ usage (char *prog)
   printf ("  -z, --zero\t add a final overwrite with zeros\n");
   printf ("\n");
   printf ("\"Amnesia remove\" bugs report: "
-	  "<http://github.com/RoubyPA/amnesiaremove>\n"); /* TODO create repo ! */
+	  "<http://github.com/RoubyPA/amnesiaremove>\n\n");
   version ();
   exit (EXIT_SUCCESS);
 }
@@ -154,7 +154,11 @@ main (int argc, char **argv)
     }
   
   for (int i = 0 ; files[i] != NULL ; i++)
-    {
+    { 
+      if (conf.interactive == 2)
+	if (!interactive(files[i]))
+	  break;
+      
       if (conf.recursive)
 	recursive_remove (files[i]);
       else if (conf.dir)

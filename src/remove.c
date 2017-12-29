@@ -5,6 +5,7 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 
+#include "amnesia.h"
 #include "remove.h"
 #include "error.h"
 #include "random.h"
@@ -29,6 +30,23 @@ file_len (FILE *file)
   return len;
 }
 
+bool
+interactive(char *file)
+{
+  char yesno;
+  
+  printf ("remove \'%s\' (y/n)? ", file);
+
+  /* HACK fix bug whene getc get the '\n' */
+  do
+    yesno = getc(stdin);
+  while (yesno == '\n');
+  
+  if (yesno == 'y')
+    return true;
+  else
+    return false;
+}
 
 /* Overwrite a file */
 int
@@ -76,7 +94,7 @@ void
 _rmdir (char *rep)
 {
   assert (rep != NULL);
-
+  
   if (rmdir (rep) == -1)
     error ("rmdir");
   
@@ -97,6 +115,13 @@ remove_file (char *file_path)
   if (file == NULL)
     error ("fopen");
 
+  /* interactive mode */
+  if (conf.interactive == 1)
+    {
+      if (!interactive(file_path))
+	return ERROR;
+    }
+  
   /* overwrite */
   if (conf.amnesia.actived)
     {
@@ -146,15 +171,20 @@ recursive_remove (char *rep)
       if (dir_info->d_type == DT_DIR)
 	recursive_remove (path);
       else if (dir_info->d_type == DT_REG)
-	remove_file (path);
+	if (remove_file (path) == ERROR)
+	  return;
       /* TODO other file type */
       /* else if (dir_info->d_type == DT_LNK) */
       /* 	remove_file (dir_info); */
-      else /* TODO delete */
-	error ("format not implemented yet");
     }
 
-  _rmdir (rep);
-  
+
   free (path);
+  
+  /* interactive mode */
+  if (conf.interactive == 1)
+    if (!interactive(rep))
+      return;
+
+  _rmdir (rep);
 }
